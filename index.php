@@ -1,20 +1,15 @@
 <?php
 
- declare(strict_types=1);
-
 class Encounter
 {
-   
-
     public const RESULT_WINNER = 1;
     public const RESULT_LOSER = -1;
     public const RESULT_DRAW = 0;
-    public const RESULT_POSSIBILITIES = [self::RESULT_WINNER,self::RESULT_LOSER, self::RESULT_DRAW];
-
+    public const RESULT_POSSIBILITIES = [self::RESULT_WINNER, self::RESULT_LOSER, self::RESULT_DRAW];
 
     public static function probabilityAgainst(Player $playerOne, Player $playerTwo): float
     {
-        return 1/(1+(10 ** (($playerTwo->getLevel() - $playerOne->getLevel())/400)));    
+        return 1/(1+(10 ** (($playerTwo->getLevel() - $playerOne->getLevel())/400)));
     }
 
     public static function setNewLevel(Player $playerOne, Player $playerTwo, int $playerOneResult): void
@@ -22,12 +17,13 @@ class Encounter
         if (!in_array($playerOneResult, self::RESULT_POSSIBILITIES)) {
             trigger_error(sprintf('Invalid result. Expected %s',implode(' or ', self::RESULT_POSSIBILITIES)));
         }
+
         $playerOne->setLevel(
-        $playerOne->getLevel() + round(32 * ($playerOneResult - self::probabilityAgainst($playerOne, $playerTwo)))
+            $playerOne->getLevel() +
+            round(32 * ($playerOneResult - self::probabilityAgainst($playerOne, $playerTwo)))
         );
     }
 }
-
 
 
 class Player
