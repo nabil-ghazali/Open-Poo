@@ -53,4 +53,12 @@ class Admin extends User
     {
         $this->roles = $roles;
     }
+    public function printStatus()
+    {
+	    // vous pouvez accéder au status comme si la propriété appartenait à Admin :)
+        echo $this->status;
+    }
 }
+
+$admin = new Admin('Lily');
+$admin->printStatus();
