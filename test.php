@@ -1,21 +1,55 @@
 <?php
-// Définition de la classe "Voiture"
  
 declare(strict_types=1);
  
-class Pont
+class Admin
 {
-
-
-    public function __construct(private float $longueur, private float $largeur) 
+    private const STATUS_ACTIVE = 'active';
+    private const STATUS_INACTIVE = 'inactive';
+ 
+    // Ajout d'un tableau de roles pour affiner les droits des administrateurs :)
+    public function __construct(public string $username, private array $roles = [], private string $status = self::STATUS_ACTIVE)
     {
-        $this->longueur = $longueur;
-        $this->largeur = $largeur;
-    
+    }
+ 
+    public function setStatus(string $status): void
+    {
+        if (!in_array($status, [self::STATUS_ACTIVE, self::STATUS_INACTIVE])) {
+            trigger_error(sprintf('Le status %s n\'est pas valide. Les status possibles sont : %s', $status, implode(', ', [self::STATUS_ACTIVE, self::STATUS_INACTIVE])), E_USER_ERROR);
+        };
+ 
+        $this->status = $status;
+    }
+ 
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+ 
+    // Méthode d'ajout d'un rôle, puis on supprime les doublons avec array_filter.
+    public function addRole(string $role): void
+    {
+        $this->roles[] = $role;
+        $this->roles = array_filter($this->roles);
     }
 
-}
-    
-$towerBridge= new Pont(262.0,62.0);
+    // Méthode de renvoie des rôles, dans lequel on définit le rôle ADMIN par défaut.
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        $roles[] = 'ADMIN';
 
-var_dump($towerBridge);
+        return $roles;
+    }
+ 
+    public function setRoles(array $roles): void
+    {
+        $this->roles = $roles;
+    }
+}
+
+$user1=new Admin('nab',['admin'],'active');
+$user1->setStatus('inactive');
+$user1->setRoles(['simplyUser']);
+$user1->username='jean';
+var_dump($user1);
